@@ -7,8 +7,8 @@ public class UserProfile: Profile
 
   public UserProfile()
   {
-    CreateMap<Models.User, Dtos.CreateUserDTO>();
-    CreateMap<Dtos.CreateUserDTO, Models.User>();
+    CreateMap<Models.User, Dtos.CreateUserDto>();
+    CreateMap<Dtos.CreateUserDto, Models.User>();
   }
 
 }

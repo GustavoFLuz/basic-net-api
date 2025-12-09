@@ -27,7 +27,7 @@ public class AuthController : ControllerBase
   }
 
   [HttpPost("register")]
-  public async Task<ActionResult> Register([FromBody] CreateUserDTO userDTO)
+  public async Task<ActionResult> Register([FromBody] CreateUserDto userDTO)
   {
     var user = _mapper.Map<User>(userDTO);
     if (string.IsNullOrEmpty(user.Id))
@@ -38,11 +38,13 @@ public class AuthController : ControllerBase
     if (!result.Succeeded)
       return BadRequest(result.Errors);
 
+    await _userManager.AddToRoleAsync(user, "USER");
+
     return Ok("User registered");
   }
 
   [HttpPost("login")]
-  public async Task<ActionResult> Login([FromBody] LoginUserDTO loginDTO)
+  public async Task<ActionResult> Login([FromBody] LoginUserDto loginDTO)
   {
     var result = await _signInManager.PasswordSignInAsync(loginDTO.Username, loginDTO.Password, false, false);
     if (!result.Succeeded)
@@ -57,20 +59,5 @@ public class AuthController : ControllerBase
   {
     await _signInManager.SignOutAsync();
     return Ok("User logged out");
-  }
-
-  [HttpGet("me")]
-  [Authorize]
-  public async Task<ActionResult<User>> GetCurrentUser()
-  {
-    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-    if (userId == null)
-      return Unauthorized();
-
-    var user = await _userManager.FindByIdAsync(userId);
-    if (user == null)
-      return NotFound("User not found");
-
-    return Ok(user);
   }
 }

@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace UserService.Dtos;
 
-public class CreateUserDTO
+public class CreateUserDto
 {
 
   [Required]

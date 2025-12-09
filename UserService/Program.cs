@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using UserService.Data;
+using UserService.Enums;
 using UserService.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -15,7 +16,11 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 builder.Services
-    .AddIdentity<User, IdentityRole>()
+    .AddIdentity<User, IdentityRole>(options =>
+    {
+      options.Password.RequireNonAlphanumeric = false;
+      options.Password.RequireUppercase = false;
+    })
     .AddEntityFrameworkStores<DatabaseContext>()
     .AddDefaultTokenProviders();
 
@@ -31,6 +36,14 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+using (var scope = app.Services.CreateScope())
+{
+  var roleManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole>>();
+  foreach (var role in Enum.GetNames(typeof(RolesEnum)))
+    if (!await roleManager.RoleExistsAsync(role))
+      await roleManager.CreateAsync(new IdentityRole(role));
+}
 
 using (var scope = app.Services.CreateScope())
 {
