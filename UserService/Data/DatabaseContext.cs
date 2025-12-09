@@ -12,4 +12,14 @@ public class DatabaseContext : IdentityDbContext<User, IdentityRole, string>
 
   }
   public DbSet<Address> Addresses { get; set; }
+
+  protected override void OnModelCreating(ModelBuilder builder)
+  {
+    base.OnModelCreating(builder);
+    builder.Entity<User>()
+      .HasMany(u => u.Addresses)
+      .WithOne()
+      .HasForeignKey(a => a.UserId)
+      .OnDelete(DeleteBehavior.Cascade);
+  }
 }

@@ -5,6 +5,5 @@ namespace UserService.Models;
 
 public class User : IdentityUser<string>
 {
-  [Required]
-  public required List<Address> Addresses { get; set; }
+  public List<Address>? Addresses { get; set; }
 }

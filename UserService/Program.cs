@@ -27,6 +27,12 @@ builder.Services
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+  var db = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
+  await db.Database.MigrateAsync();
+}
+
 app.UseSwagger();
 app.UseSwaggerUI();
 
@@ -43,12 +49,6 @@ using (var scope = app.Services.CreateScope())
   foreach (var role in Enum.GetNames(typeof(RolesEnum)))
     if (!await roleManager.RoleExistsAsync(role))
       await roleManager.CreateAsync(new IdentityRole(role));
-}
-
-using (var scope = app.Services.CreateScope())
-{
-  var db = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
-  await db.Database.MigrateAsync();
 }
 
 app.Run();
