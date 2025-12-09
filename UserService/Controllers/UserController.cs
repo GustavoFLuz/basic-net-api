@@ -1,10 +1,7 @@
 using System.Security.Claims;
-using System.Threading.Tasks;
-using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using UserService.Data;
 using UserService.Dtos;
 using UserService.Models;
 
@@ -16,14 +13,10 @@ namespace UserService.Controllers;
 public class UserController : ControllerBase
 {
 
-  private readonly DatabaseContext _context;
-  private readonly IMapper _mapper;
   private readonly UserManager<User> _userManager;
 
-  public UserController(DatabaseContext context, IMapper mapper, UserManager<User> userManager)
+  public UserController(UserManager<User> userManager)
   {
-    _context = context;
-    _mapper = mapper;
     _userManager = userManager;
   }
 

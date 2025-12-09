@@ -1,9 +1,7 @@
-using System.Security.Claims;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using UserService.Data;
 using UserService.Dtos;
 using UserService.Models;
 
@@ -13,14 +11,12 @@ namespace UserService.Controllers;
 [ApiController]
 public class AuthController : ControllerBase
 {
-  private readonly DatabaseContext _context;
   private readonly UserManager<User> _userManager;
   private readonly SignInManager<User> _signInManager;
   private readonly IMapper _mapper;
 
-  public AuthController(DatabaseContext context, UserManager<User> userManager, SignInManager<User> signInManager, IMapper mapper)
+  public AuthController(UserManager<User> userManager, SignInManager<User> signInManager, IMapper mapper)
   {
-    _context = context;
     _userManager = userManager;
     _signInManager = signInManager;
     _mapper = mapper;
